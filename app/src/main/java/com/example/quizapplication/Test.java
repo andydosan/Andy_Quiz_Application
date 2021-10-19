@@ -38,7 +38,6 @@ public class Test extends AppCompatActivity {
     private int currentquestion = 0;
     private int mQuestionsLength;
     String answers[] = {"answerA", "answerB", "answerC", "answerD"};
-    int bruh;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
