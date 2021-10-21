@@ -14,6 +14,9 @@ import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.koushikdutta.async.future.FutureCallback;
+import com.koushikdutta.ion.Ion;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -27,6 +30,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
     Button button;
+    TextView text;
     private Spinner spinnerQuizzes;
     public static String quizname;
 
@@ -36,10 +40,18 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         setContentView(R.layout.activity_main);
 
         button = (Button) findViewById(R.id.button5);
+        text = (TextView) findViewById(R.id.textView);
         spinnerQuizzes = findViewById(R.id.spinner);
         String[] quizzes= getResources().getStringArray(R.array.quizzes);
 
         spinnerQuizzes.setOnItemSelectedListener(this);
+
+        Ion.with(getApplicationContext()).load("https://sites.google.com/asianhope.org/mobileresources").asString().setCallback(new FutureCallback<String>() {
+            @Override
+            public void onCompleted(Exception e, String result) {
+                text.setText(result);
+            }
+        });
 
         ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, quizzes);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
