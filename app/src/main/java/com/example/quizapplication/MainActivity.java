@@ -33,7 +33,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     TextView text;
     private Spinner spinnerQuizzes;
     public static String quizname;
-    int bruh;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
