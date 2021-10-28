@@ -3,6 +3,7 @@ package com.example.quizapplication;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -14,12 +15,19 @@ import android.widget.TextView;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 
+import org.jsoup.Jsoup;
+
+import java.io.IOException;
+import java.util.ArrayList;
+
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
     Button button;
     TextView text;
     private Spinner spinnerQuizzes;
     public static String quizname;
+    ArrayList<ArrayList<String>> tests = new ArrayList<ArrayList<String>>();
+    ArrayList<String> inner = new ArrayList<String>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,13 +40,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         String[] quizzes= getResources().getStringArray(R.array.quizzes);
 
         spinnerQuizzes.setOnItemSelectedListener(this);
-
-        Ion.with(getApplicationContext()).load("https://sites.google.com/asianhope.org/mobileresources").asString().setCallback(new FutureCallback<String>() {
-            @Override
-            public void onCompleted(Exception e, String result) {
-                text.setText(result);
-            }
-        });
 
         ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, quizzes);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -67,5 +68,33 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
 
+    }
+
+    private class description_webscrape extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            org.jsoup.nodes.Document document = null;
+            try {
+                document = Jsoup.connect("https://sites.google.com/asianhope.org/mobileresources").get();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+
+
+        }
     }
 }
