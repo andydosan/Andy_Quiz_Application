@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -31,7 +32,19 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private Spinner spinnerQuizzes;
     public static String quizname;
     ArrayList<ArrayList<String>> tests = new ArrayList<ArrayList<String>>();
-    ArrayList<String> inner = new ArrayList<String>();
+    String[] quizzes = {
+            "andyquiz1.xml",
+            "andyquiz2.xml",
+            "blayquiz1.xml",
+            "blayquiz2.xml",
+            "minchanquiz1.xml",
+            "minchanquiz2.xml",
+            "ryanquiz1.xml",
+            "ryanquiz2.xml",
+            "yejinquiz1.xml",
+            "yejinquiz2.xml",
+    };
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,13 +54,15 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         button = (Button) findViewById(R.id.button5);
         text = (TextView) findViewById(R.id.textView);
         spinnerQuizzes = findViewById(R.id.spinner);
-        String[] quizzes= getResources().getStringArray(R.array.quizzes);
 
         spinnerQuizzes.setOnItemSelectedListener(this);
 
         ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, quizzes);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerQuizzes.setAdapter(adapter);
+
+        description_webscrape dw = new description_webscrape();
+        dw.execute();
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -100,22 +115,38 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     quizLinks.add("https://sites.google.com"+link.attr("href"));
                 }
             }
-            System.out.println(quizLinks.size()+" quizzes found");
-            ArrayList<String> quizzes = new ArrayList<String>();
+            Log.d("MyApp", quizLinks.size()+" quizzes found");
             for(String url:quizLinks)
             {
-                System.out.println("connecting to "+url);
-                doc = Jsoup.connect(url).get();
-                quizzes.add(extractQuiz(doc.html()));
 
+                Log.d("MyApp", "connecting to " + url);
+                try {
+                    doc = Jsoup.connect(url).get();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                ArrayList<String> inner = new ArrayList<String>();
+                inner.add(url.replace("https://sites.google.com/asianhope.org/mobileresources/q",""));
+                try {
+                    inner.add(extractQuiz(doc.html()));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                tests.add(inner);
             }
             return null;
         }
 
         @Override
         protected void onPostExecute(Void aVoid) {
-
-
+            text.setText("connection succeeded");
+            Log.d("MyApp", String.valueOf(tests.size()));
+            Log.d("MyApp", String.valueOf(tests.get(0).size()));
+            for (int i = 0; i < tests.size(); i++) {
+                Log.d("MyApp", tests.get(i).get(0));
+                Log.d("MyApp", tests.get(i).get(1));
+            }
         }
     }
 
