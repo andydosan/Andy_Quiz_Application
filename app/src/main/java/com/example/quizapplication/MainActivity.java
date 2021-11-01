@@ -16,9 +16,13 @@ import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 
 import org.jsoup.Jsoup;
+import org.jsoup.helper.Validate;
+import org.jsoup.parser.Parser;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
@@ -70,6 +74,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     }
 
+
     private class description_webscrape extends AsyncTask<Void, Void, Void> {
 
         @Override
@@ -79,15 +84,31 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         @Override
         protected Void doInBackground(Void... voids) {
-            org.jsoup.nodes.Document document = null;
+            org.jsoup.nodes.Document doc = null;
             try {
-                document = Jsoup.connect("https://sites.google.com/asianhope.org/mobileresources").get();
+                doc = Jsoup.connect("https://sites.google.com/asianhope.org/mobileresources").get();
             } catch (IOException e) {
                 e.printStackTrace();
             }
 
+            org.jsoup.select.Elements links = doc.select("a[href]");
+            Set<String> quizLinks = new HashSet<String>();
+            for(org.jsoup.nodes.Element link:links)
+            {
+                if(link.attr("href").contains("mobileresources/q"))
+                {
+                    quizLinks.add("https://sites.google.com"+link.attr("href"));
+                }
+            }
+            System.out.println(quizLinks.size()+" quizzes found");
+            ArrayList<String> quizzes = new ArrayList<String>();
+            for(String url:quizLinks)
+            {
+                System.out.println("connecting to "+url);
+                doc = Jsoup.connect(url).get();
+                quizzes.add(extractQuiz(doc.html()));
 
-
+            }
             return null;
         }
 
@@ -97,4 +118,26 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         }
     }
+
+    private static String extractQuiz(String html) throws IOException {
+        boolean strictMode = true;
+        String paragraphTagOpen = "<p[^>]+>";
+        String paragraphTagClose = "</p[^>]*>";
+        String quizTagOpen = "<quiz";
+        String quizTagClose ="</quiz>";
+
+
+
+        String quiz = html;
+        quiz = Parser.unescapeEntities(quiz, strictMode);
+        int beginQuizXml = quiz.lastIndexOf(quizTagOpen);
+        int endQuizXml = quiz.lastIndexOf(quizTagClose) + quizTagClose.length();
+
+        Validate.isTrue(beginQuizXml>=0&&endQuizXml>=0," quiz not found ");
+
+        quiz = quiz.substring(beginQuizXml, endQuizXml).replaceAll(paragraphTagOpen, "")
+                .replaceAll(paragraphTagClose, "").trim();
+        return quiz;
+    }
+
 }
