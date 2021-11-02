@@ -31,20 +31,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     TextView text;
     private Spinner spinnerQuizzes;
     public static String quizname;
-    ArrayList<ArrayList<String>> tests = new ArrayList<ArrayList<String>>();
-    String[] quizzes = {
-            "andyquiz1.xml",
-            "andyquiz2.xml",
-            "blayquiz1.xml",
-            "blayquiz2.xml",
-            "minchanquiz1.xml",
-            "minchanquiz2.xml",
-            "ryanquiz1.xml",
-            "ryanquiz2.xml",
-            "yejinquiz1.xml",
-            "yejinquiz2.xml",
-    };
-
+    public static ArrayList<ArrayList<String>> tests = new ArrayList<ArrayList<String>>();
+    String[] quizzes = new String[10];
+    ArrayAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,10 +45,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         spinnerQuizzes = findViewById(R.id.spinner);
 
         spinnerQuizzes.setOnItemSelectedListener(this);
-
-        ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, quizzes);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerQuizzes.setAdapter(adapter);
+        spinnerQuizzes.setEnabled(false);
 
         description_webscrape dw = new description_webscrape();
         dw.execute();
@@ -147,6 +133,13 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 Log.d("MyApp", tests.get(i).get(0));
                 Log.d("MyApp", tests.get(i).get(1));
             }
+            for (int i = 0; i < tests.size(); i++) {
+                quizzes[i] = tests.get(i).get(0);
+            }
+            adapter = new ArrayAdapter(MainActivity.this, android.R.layout.simple_spinner_item, quizzes);
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            spinnerQuizzes.setAdapter(adapter);
+            spinnerQuizzes.setEnabled(true);
         }
     }
 
