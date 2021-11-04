@@ -13,9 +13,6 @@ import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.koushikdutta.async.future.FutureCallback;
-import com.koushikdutta.ion.Ion;
-
 import org.jsoup.Jsoup;
 import org.jsoup.helper.Validate;
 import org.jsoup.parser.Parser;
@@ -46,6 +43,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         spinnerQuizzes.setOnItemSelectedListener(this);
         spinnerQuizzes.setEnabled(false);
+        button.setEnabled(false);
 
         description_webscrape dw = new description_webscrape();
         dw.execute();
@@ -126,13 +124,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         @Override
         protected void onPostExecute(Void aVoid) {
-            text.setText("connection succeeded");
-            Log.d("MyApp", String.valueOf(tests.size()));
-            Log.d("MyApp", String.valueOf(tests.get(0).size()));
-            for (int i = 0; i < tests.size(); i++) {
-                Log.d("MyApp", tests.get(i).get(0));
-                Log.d("MyApp", tests.get(i).get(1));
-            }
+            text.setText("Choose a quiz");
             for (int i = 0; i < tests.size(); i++) {
                 quizzes[i] = tests.get(i).get(0);
             }
@@ -140,6 +132,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             spinnerQuizzes.setAdapter(adapter);
             spinnerQuizzes.setEnabled(true);
+            button.setEnabled(true);
         }
     }
 

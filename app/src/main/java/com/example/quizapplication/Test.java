@@ -7,14 +7,12 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -47,9 +45,12 @@ public class Test extends AppCompatActivity {
         button4 = (Button) findViewById(R.id.button4);
 
         try {
-            int quiznum = Integer.valueOf(MainActivity.quizname);
-            Log.d("MyApp", "Number is " + quiznum);
-            String quiz = MainActivity.tests.get(quiznum).get(1);
+            String quiz = null;
+            for (int i = 0; i < MainActivity.tests.size(); i++) {
+                if (MainActivity.quizname.equals(MainActivity.tests.get(i).get(0))) {
+                    quiz = MainActivity.tests.get(i).get(1);
+                }
+            }
             InputStream is = new ByteArrayInputStream(quiz.getBytes("UTF-8"));
 
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
