@@ -19,6 +19,8 @@ import org.jsoup.parser.Parser;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -119,6 +121,16 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 }
                 tests.add(inner);
             }
+
+            Collections.sort(tests, new Comparator<ArrayList<String>>() {
+                @Override
+                public int compare(ArrayList<String> strings, ArrayList<String> t1) {
+                    return Integer.valueOf(strings.get(0)).compareTo(Integer.valueOf(t1.get(0)));
+                }
+            });
+            for (int i = 0; i < tests.size(); i++) {
+                tests.get(i).set(0, "q" + (i+1));
+            }
             return null;
         }
 
@@ -142,8 +154,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         String paragraphTagClose = "</p[^>]*>";
         String quizTagOpen = "<quiz";
         String quizTagClose ="</quiz>";
-
-
 
         String quiz = html;
         quiz = Parser.unescapeEntities(quiz, strictMode);
