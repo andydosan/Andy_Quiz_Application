@@ -85,6 +85,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         @Override
         protected Void doInBackground(Void... voids) {
+            // Thank you Mr. Skogen for the code
             org.jsoup.nodes.Document doc = null;
             try {
                 doc = Jsoup.connect("https://sites.google.com/asianhope.org/mobileresources").get();
