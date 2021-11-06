@@ -114,7 +114,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 }
 
                 ArrayList<String> inner = new ArrayList<String>();
-                inner.add(url.replace("https://sites.google.com/asianhope.org/mobileresources/",""));
+                inner.add(url.replace("https://sites.google.com/asianhope.org/mobileresources/q",""));
                 try {
                     inner.add(extractQuiz(doc.html()));
                 } catch (IOException e) {
